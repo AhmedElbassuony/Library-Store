@@ -1,88 +1,186 @@
-# 📚 Online Library Store
+# 📚 Online Bookstore API
 
-A full-stack web application that allows users to browse, search, and purchase books online. It includes user authentication, product management, shopping cart functionality, and an admin dashboard.
-
----
+An online bookstore backend built with Node.js, Express, and MongoDB using Mongoose. This API allows users to register, browse books by category or author, add items to their cart, place orders, and write reviews.
 
 ## 🔧 Tech Stack
-- **Frontend**: Angular
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB (via Mongoose)
-- **Authentication**: JWT
+
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JavaScript (ES6+)
 
 ---
 
-## 👥 User Roles
-1. **User**
-   - Register / Login
-   - View books
-   - Search/filter books by author, category, title
-   - Add/remove items from cart
-   - View order history
+## 🚀 Features
 
-2. **Admin**
-   - Manage books (Create, Update, Delete)
-   - View all users
-   - Manage orders
+- User registration & login
+- Book browsing & filtering by category or author
+- Shopping cart (stored in user document)
+- Order placement with order items
+- Review and rating system
+- Admin role support
+- Timestamps for all documents
 
 ---
 
-## 🗂️ Main Features
+## 🧩 Data Models
 
-### ✅ User Side
-- 📖 **Book Browsing**: Paginated listing of all books
-- 🔍 **Search & Filter**: By author, title, and category
-- 🛒 **Shopping Cart**: Add/remove books, checkout
-- 👤 **Profile**: View order history and user details
-
-### ✅ Admin Side
-- 📦 **Book Management**: Add, update, or delete books
-- 📊 **Order Management**: View all user orders and update statuses
-- 👥 **User Management**: View and manage registered users
-
----
-
-## 📁 Project Structure
-
-```
-backend/
-  ├── models/
-  ├── routes/
-  ├── controllers/
-  ├── middleware/
-  └── server.js
-
-frontend/
-  ├── src/
-      ├── app/
-          ├── components/
-          ├── pages/
-          ├── services/
-          └── app.module.ts
+### 🧑‍💻 User
+```js
+{
+  username: String,
+  email: String (lowercased, unique),
+  password: String,
+  address: String,
+  phone: String,
+  profilePicture: String,
+  dateOfBirth: Date,
+  role: "user" | "admin",
+  gender: "male" | "female",
+  cart: [
+    {
+      book: ObjectId (Book),
+      quantity: Number (min: 1)
+    }
+  ]
+}
 ```
 
+### 📖 Book
+```js
+{
+  title: String,
+  author: ObjectId (Author),
+  category: [ObjectId (Category)],
+  publishedDate: Date,
+  summary: String,
+  coverImage: String,
+  price: Number,
+  stock: Number,
+  averageRating: Number (default: 0)
+}
+```
+
+### 🖋️ Author
+```js
+{
+  name: String,
+  bio: String,
+  dateOfBirth: Date,
+  nationality: String,
+  profilePicture: String
+}
+```
+
+### 🗂️ Category
+```js
+{
+  name: String (unique),
+  description: String
+}
+```
+
+### ⭐ Review
+```js
+{
+  book: ObjectId (Book),
+  user: ObjectId (User),
+  rating: Number (1-5),
+  comment: String
+}
+```
+
+### 📦 OrderItem
+```js
+{
+  order: ObjectId (Order),
+  book: ObjectId (Book),
+  quantity: Number,
+  price: Number
+}
+```
+
+### 🧾 Order
+```js
+{
+  user: ObjectId (User),
+  items: [ObjectId (OrderItem)],
+  totalAmount: Number,
+  status: "pending" | "shipped" | "delivered" | "cancelled",
+  shippingAddress: String
+}
+```
+
 ---
 
-## 🧪 Sample APIs (Express)
+## 📁 Folder Structure (Suggested)
 
-- `POST /api/auth/register` – Register a new user
-- `POST /api/auth/login` – Login and get JWT
-- `GET /api/books` – Get all books
-- `GET /api/books/search?q=title` – Search books
-- `POST /api/cart` – Add book to cart
-- `GET /api/admin/orders` – Get all orders (admin only)
+```
+project/
+│
+├── models/
+│   ├── Author.js
+│   ├── Book.js
+│   ├── Category.js
+│   ├── Order.js
+│   ├── OrderItem.js
+│   ├── Review.js
+│   └── User.js
+│
+├── routes/
+│   └── (Define route files here)
+│
+├── controllers/
+│   └── (Business logic)
+│
+├── middlewares/
+│   └── auth.js
+│
+├── .env
+├── server.js
+└── README.md
+```
 
 ---
 
-## 🔐 Authentication & Authorization
+## 🛠️ Setup & Run
 
-- Uses JWT to protect routes
-- Role-based access for admin vs. user
+### 1. Clone the repository
+```bash
+git clone https://github.com/AhmedElbassuony/Library-Store.git
+cd Library-Store
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Configure environment
+Create a `.env` file:
+```
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/bookstore
+JWT_SECRET=yourSecretKey
+```
+
+### 4. Run the server
+```bash
+npm run dev
+```
 
 ---
 
-## 🧑‍💻 Future Improvements
+## 📬 Future Improvements
+
 - Recommendation system
-- Book ratings and reviews
-- Wishlist / Favorites
-- Real payment gateway integration (currently mock checkout)
+- Wishlist functionality
+- Book search and pagination
+- Email notifications
+- Payment integration (e.g. Stripe)
+
+---
+
+## 📝 License
+
+MIT © Ahmed Elbassuony
