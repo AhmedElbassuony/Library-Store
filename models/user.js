@@ -52,7 +52,8 @@ const userSchema = new mongoose.Schema({
         }
     }]
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false // disables the __v field
 });
 
 const User = mongoose.model("User", userSchema);

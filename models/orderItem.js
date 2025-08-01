@@ -22,7 +22,8 @@ const orderItemSchema = new mongoose.Schema({
         min: 0
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false // disables the __v field
 });
 
 const OrderItem = mongoose.model("OrderItem", orderItemSchema);

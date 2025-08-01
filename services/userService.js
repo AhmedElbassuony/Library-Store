@@ -1,5 +1,5 @@
-import User from '../models/userModel.js';
-
+import User from '../models/user.js';
+import { hashPassword } from '../utils/index.js';
 const getAllUsers = async () => {
     return await User.find().select('-password');
 };
@@ -13,6 +13,8 @@ const getUserByEmail = async (email) => {
 };
 
 const createUser = async (userData) => {
+    userData.email = userData.email.toLowerCase(); // Ensure email is stored in lowercase
+    userData.password = await hashPassword(userData.password, 8); // Hash the password
     return await User.insertOne(userData);
 };
 
@@ -24,12 +26,18 @@ const deleteUser = async (userId) => {
     return await User.findByIdAndDelete(userId);
 };
 
-export default {
+const isUserExists = async (email) => {
+    const user = await getUserByEmail(email);
+    return user !== null;
+};
+
+export {
     getAllUsers,
     getUserById,
     getUserByEmail,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    isUserExists
 };
 

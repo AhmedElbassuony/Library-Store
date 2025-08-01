@@ -12,7 +12,8 @@ const categorySchema = new mongoose.Schema({
         trim: true
     }
 }, {
-    timestamps: true // adds createdAt and updatedAt
+    timestamps: true, // adds createdAt and updatedAt,
+    versionKey: false // disables the __v field
 });
 
 const Category = mongoose.model("Category", categorySchema);

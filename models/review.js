@@ -22,7 +22,8 @@ const reviewSchema = new mongoose.Schema({
         trim: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false // disables the __v field
 });
 
 const Review = mongoose.model("Review", reviewSchema);

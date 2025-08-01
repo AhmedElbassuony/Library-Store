@@ -23,7 +23,8 @@ const orderSchema = new mongoose.Schema({
     },
     shippingAddress: String
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false // disables the __v field
 });
 
 const Order = mongoose.model("Order", orderSchema);

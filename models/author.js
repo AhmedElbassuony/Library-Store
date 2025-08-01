@@ -18,7 +18,8 @@ const authorSchema = new mongoose.Schema({
     },
     profilePicture: String
 }, {
-    timestamps: true // includes createdAt and updatedAt
+    timestamps: true, // includes createdAt and updatedAt
+    versionKey: false // disables the __v field
 });
 
 const Author = mongoose.model("Author", authorSchema);

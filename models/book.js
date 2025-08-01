@@ -45,7 +45,8 @@ const bookSchema = new mongoose.Schema({
         max: 5
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false // disables the __v field
 });
 
 const Book = mongoose.model("Book", bookSchema);
