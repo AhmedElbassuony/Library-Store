@@ -14,11 +14,14 @@ const getUserByEmail = async (email) => {
 
 const createUser = async (userData) => {
     userData.email = userData.email.toLowerCase(); // Ensure email is stored in lowercase
-    userData.password = await hashPassword(userData.password, 8); // Hash the password
+    userData.password = await hashPassword(userData.password); // Hash the password
     return await User.insertOne(userData);
 };
 
 const updateUser = async (userId, userData) => {
+    if (userData.password) {
+        userData.password = await hashPassword(userData.password); // Hash the password if provided
+    }
     return await User.findByIdAndUpdate(userId, userData, { new: true });
 };
 

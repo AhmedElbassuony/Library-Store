@@ -1,5 +1,19 @@
-import { getAllUsers, isUserExists, createUser, getUserById, getUserByEmail } from '../services/userService.js';
-import { createJSONResponse, userValidation, signInUserValidation, isPasswordCorrect } from '../utils/index.js';
+import {
+    getAllUsers,
+    isUserExists,
+    createUser,
+    getUserById,
+    getUserByEmail,
+    updateUser,
+    deleteUser
+} from '../services/userService.js';
+import {
+    createJSONResponse,
+    userValidation,
+    signInUserValidation,
+    isPasswordCorrect,
+    userUpdateValidation
+} from '../utils/index.js';
 import mongoose from 'mongoose';
 
 const getUsers = async (req, res) => {
@@ -72,9 +86,55 @@ const signInUser = async (req, res) => {
     }
 }
 
+const updateUserController = async (req, res) => {
+    const userId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json(createJSONResponse(false, 'Request body is required'));
+    }
+
+    const validationResult = userUpdateValidation(req.body);
+    if (!validationResult.isValid) {
+        return res.status(400).json(createJSONResponse(false, 'Validation errors', validationResult.errors));
+    }
+
+    try {
+        const updatedUser = await updateUser(userId, req.body);
+        if (!updatedUser) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        updatedUser.password = undefined; // Remove password from response
+        return res.json(createJSONResponse(true, 'User updated successfully', updatedUser));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error updating user', error.message));
+    }
+};
+
+const deleteUserController = async (req, res) => {
+    const userId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    try {
+        const deletedUser = await deleteUser(userId);
+        if (!deletedUser) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        return res.json(createJSONResponse(true, 'User deleted successfully', deletedUser));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error deleting user', error.message));
+    }
+};
+
+
+
 export {
     getUsers,
     registerUser,
     getUserByIdController,
-    signInUser
+    signInUser,
+    updateUserController,
+    deleteUserController
 }

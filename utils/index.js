@@ -28,6 +28,8 @@ const userValidation = (user) => {
     }
     if (!username) {
         errors.username = 'Username is required';
+    } else if (username.length < 3) {
+        errors.username = 'Username must be at least 3 characters long';
     }
     if (!gender) {
         errors.gender = 'Gender is required';
@@ -51,6 +53,44 @@ const signInUserValidation = (user) => {
     return { isValid: Object.keys(errors).length === 0, errors };
 };
 
+const userUpdateValidation = (user) => {
+    const { email, username, gender, role, cart, password } = user;
+    const errors = {};
+
+    if (email) {
+        errors.email = "You cannot update email";
+    }
+
+    if (password && password.length < 6) {
+        errors.password = 'Password must be at least 6 characters long';
+    }
+
+    if (username) {
+        const trimmedUsername = username.trim();
+        if (trimmedUsername.length < 3) {
+            errors.username = 'Username must be at least 3 characters long';
+        }
+    }
+
+    if (gender) {
+        errors.gender = 'You cannot update gender';
+    }
+
+    if (role) {
+        errors.role = 'You cannot update role';
+    }
+
+    if (cart) {
+        errors.cart = 'You cannot update cart';
+    }
+
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors
+    };
+};
+
+
 
 const hashPassword = async (password) => {
     const hashedPassword = await bycrapt.hash(password, 8);
@@ -61,4 +101,11 @@ const isPasswordCorrect = async (password, hashedPassword) => {
     return await bycrapt.compare(password, hashedPassword);
 };
 
-export { createJSONResponse, userValidation, hashPassword, isPasswordCorrect, signInUserValidation };
+export {
+    createJSONResponse,
+    userValidation,
+    hashPassword,
+    isPasswordCorrect,
+    signInUserValidation,
+    userUpdateValidation
+};
