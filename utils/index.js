@@ -90,6 +90,21 @@ const userUpdateValidation = (user) => {
     };
 };
 
+hasInvalidBook = (cart) => {
+    if (!Array.isArray(cart)) {
+        return true;
+    }
+    for (const item of cart) {
+        if (!item.book || !item.quantity || typeof item.quantity !== 'number' || item.quantity <= 0) {
+            return true;
+        }
+        if (!mongoose.Types.ObjectId.isValid(item.book)) {
+            return true;
+        }
+        // Check if book exists in the database
+    }
+    return false;
+}
 
 
 const hashPassword = async (password) => {

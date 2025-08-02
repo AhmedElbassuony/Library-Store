@@ -5,7 +5,10 @@ import {
     getUserByIdController,
     signInUser,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    getCart,
+    clearCartController,
+    putCartController
 } from '../controllers/userController.js';
 
 const userRouter = express.Router();
@@ -16,4 +19,8 @@ userRouter.get('/:id', getUserByIdController);
 userRouter.put('/:id', updateUserController);
 userRouter.delete('/:id', deleteUserController);
 userRouter.post('/signin', signInUser);
+
+userRouter.get('/cart', getCart);
+userRouter.put('/cart', putCartController);
+userRouter.delete('/cart', clearCartController);
 export default userRouter;

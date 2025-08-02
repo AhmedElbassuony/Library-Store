@@ -5,7 +5,13 @@ import {
     getUserById,
     getUserByEmail,
     updateUser,
-    deleteUser
+    deleteUser,
+    getCartTotal,
+    addBookToCart,
+    removeBookFromCart,
+    clearCart,
+    getCartItems,
+    putCart
 } from '../services/userService.js';
 import {
     createJSONResponse,
@@ -128,7 +134,58 @@ const deleteUserController = async (req, res) => {
     }
 };
 
+const putCartController = async (req, res) => {
+    const userId = req.body.userId;
+    const cart = req.body.cart;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        newCart = await putCart(user, cart);
+        return res.json(createJSONResponse(true, 'Cart updated successfully', newCart));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error updating cart', error.message));
+    }
+};
 
+const getCart = async (req, res) => {
+    const userId = req.body.userId;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        const cartItems = await getCartItems(user);
+        const cartTotal = await getCartTotal(user);
+        return res.json(createJSONResponse(true, 'Cart retrieved successfully', { items: cartItems, total: cartTotal }));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error retrieving cart', error.message));
+    }
+};
+
+const clearCartController = async (req, res) => {
+    const userId = req.body.userId;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        await clearCart(user);
+        return res.json(createJSONResponse(true, 'Cart cleared successfully'));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error clearing cart', error.message));
+    }
+};
 
 export {
     getUsers,
@@ -136,5 +193,8 @@ export {
     getUserByIdController,
     signInUser,
     updateUserController,
-    deleteUserController
+    deleteUserController,
+    getCart,
+    clearCartController,
+    putCartController
 }
