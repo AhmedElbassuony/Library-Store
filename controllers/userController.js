@@ -13,13 +13,18 @@ import {
     getCartItems,
     putCart
 } from '../services/userService.js';
+
 import {
     createJSONResponse,
+    isPasswordCorrect
+} from '../utils/index.js';
+
+import {
     userValidation,
     signInUserValidation,
-    isPasswordCorrect,
     userUpdateValidation
-} from '../utils/index.js';
+} from '../utils/validation/index.js';
+
 import mongoose from 'mongoose';
 
 const getUsers = async (req, res) => {

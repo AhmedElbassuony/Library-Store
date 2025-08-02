@@ -88,6 +88,7 @@ export {
     removeBookFromCart,
     clearCart,
     getCartItems,
-    getCartTotal
+    getCartTotal,
+    putCart
 };
 
