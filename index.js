@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRouter from './routes/userRouter.js';
 import bookRouter from './routes/bookRouter.js';
-
+import authorRouter from './routes/authorRouter.js';
 
 dotenv.config();
 
@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
+app.use('/authors', authorRouter);
 
 const PORT = process.env.PORT || 3000;
 

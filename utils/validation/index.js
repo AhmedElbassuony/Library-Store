@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isAuthorExists } from '../../services/authorService.js';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -81,19 +82,15 @@ const userUpdateValidation = (user) => {
     };
 };
 
-
 const createBookValidation = (book) => {
-    const { title, author, category, price, stock, averageRating } = book;
+    const { title, author, price, stock, averageRating } = book;
     const errors = {};
     if (!title) {
         errors.title = 'Title is required';
     }
-    // if (!author || !mongoose.Types.ObjectId.isValid(author)) {
-    //     errors.author = 'Author is required and must be a valid Id';
-    // }
-    // if (!category || !mongoose.Types.ObjectId.isValid(category)) {
-    //     errors.category = 'Category is required';
-    // }
+    if (!author || !mongoose.Types.ObjectId.isValid(author) || !isAuthorExists(author)) {
+        errors.author = 'Author is required and must be a valid Id';
+    }
     if (price === undefined || price === null || price === '') {
         errors.price = 'Price is required';
     } else if (typeof price !== 'number' || Number(price) <= 0) {
@@ -116,7 +113,7 @@ const updateBookValidation = (book) => {
     if (title && typeof title !== 'string') {
         errors.title = 'Title must be a string';
     }
-    if (author && !mongoose.Types.ObjectId.isValid(author)) {
+    if (author && (!mongoose.Types.ObjectId.isValid(author) || !isAuthorExists(author))) {
         errors.author = 'Author must be a valid Id';
     }
     if (category && !mongoose.Types.ObjectId.isValid(category)) {
@@ -137,11 +134,33 @@ const updateBookValidation = (book) => {
     return { isValid: Object.keys(errors).length === 0, errors };
 }
 
+const createAuthorValidation = (author) => {
+    const { name } = author;
+    const errors = {};
+    if (!name) {
+        errors.name = 'Author name is required';
+    } else if (typeof name !== 'string' || name.trim().length === 0) {
+        errors.name = 'Author name must be a non-empty string';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+};
+
+const updateAuthorValidation = (author) => {
+    const { name } = author;
+    const errors = {};
+    if (name && (typeof name !== 'string' || name.trim().length === 0)) {
+        errors.name = 'Author name must be a non-empty string';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+};
+
 
 export {
     userValidation,
     signInUserValidation,
     userUpdateValidation,
     createBookValidation,
-    updateBookValidation
+    updateBookValidation,
+    createAuthorValidation,
+    updateAuthorValidation
 };
