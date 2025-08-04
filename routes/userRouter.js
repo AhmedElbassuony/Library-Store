@@ -10,17 +10,18 @@ import {
     clearCartController,
     putCartController
 } from '../controllers/userController.js';
+import { admin, authenticated, hasAccess } from '../utils/middleware/index.js';
 
 const userRouter = express.Router();
 
-userRouter.get('/', getUsers);
+userRouter.get('/',authenticated,admin, getUsers);
 userRouter.post('/', registerUser);
-userRouter.get('/:id', getUserByIdController);
-userRouter.put('/:id', updateUserController);
-userRouter.delete('/:id', deleteUserController);
+userRouter.get('/:id', authenticated, hasAccess, getUserByIdController);
+userRouter.put('/:id', authenticated, hasAccess, updateUserController);
+userRouter.delete('/:id', authenticated, hasAccess, deleteUserController);
 userRouter.post('/signin', signInUser);
 
-userRouter.get('/cart', getCart);
-userRouter.put('/cart', putCartController);
-userRouter.delete('/cart', clearCartController);
+userRouter.get('/cart', authenticated, getCart);
+userRouter.put('/cart', authenticated, putCartController);
+userRouter.delete('/cart', authenticated, clearCartController);
 export default userRouter;

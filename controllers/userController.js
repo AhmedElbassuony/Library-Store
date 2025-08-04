@@ -26,7 +26,7 @@ import {
 } from '../utils/validation/index.js';
 
 import mongoose from 'mongoose';
-
+import jwt from 'jsonwebtoken';
 const getUsers = async (req, res) => {
     try {
         const users = await getAllUsers();
@@ -91,7 +91,8 @@ const signInUser = async (req, res) => {
             return res.status(401).json(createJSONResponse(false, 'Invalid email or password'));
         }
         user.password = undefined; // Remove password from response
-        return res.json(createJSONResponse(true, 'User signed in successfully', user));
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '2h' });
+        return res.json(createJSONResponse(true, 'User signed in successfully', { user, token }));
     } catch (error) {
         return res.status(500).json(createJSONResponse(false, 'Error signing in user', error.message));
     }
@@ -140,7 +141,7 @@ const deleteUserController = async (req, res) => {
 };
 
 const putCartController = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.userId;
     const cart = req.body.cart;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
@@ -158,7 +159,7 @@ const putCartController = async (req, res) => {
 };
 
 const getCart = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.userId;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
     }
@@ -176,7 +177,7 @@ const getCart = async (req, res) => {
 };
 
 const clearCartController = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.userId;
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
     }

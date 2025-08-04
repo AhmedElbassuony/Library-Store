@@ -1,3 +1,8 @@
+import mongoose from 'mongoose';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
 const userValidation = (user) => {
     const { email, password, username, gender } = user;
     const errors = {};
@@ -74,4 +79,69 @@ const userUpdateValidation = (user) => {
         isValid: Object.keys(errors).length === 0,
         errors
     };
+};
+
+
+const createBookValidation = (book) => {
+    const { title, author, category, price, stock, averageRating } = book;
+    const errors = {};
+    if (!title) {
+        errors.title = 'Title is required';
+    }
+    // if (!author || !mongoose.Types.ObjectId.isValid(author)) {
+    //     errors.author = 'Author is required and must be a valid Id';
+    // }
+    // if (!category || !mongoose.Types.ObjectId.isValid(category)) {
+    //     errors.category = 'Category is required';
+    // }
+    if (price === undefined || price === null || price === '') {
+        errors.price = 'Price is required';
+    } else if (typeof price !== 'number' || Number(price) <= 0) {
+        errors.price = 'Price must be a positive number';
+    }
+    if (stock === undefined || stock === null || stock === '') {
+        errors.stock = 'Stock is required';
+    } else if (typeof stock !== 'number' || Number(stock) < 0) {
+        errors.stock = 'Stock must be a non-negative number';
+    }
+    if (averageRating !== undefined && (typeof averageRating !== 'number' || Number(averageRating) < 0 || Number(averageRating) > 5)) {
+        errors.averageRating = 'Average rating must be a number between 0 and 5';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+};
+
+const updateBookValidation = (book) => {
+    const { title, author, category, price, stock, summary, averageRating } = book;
+    const errors = {};
+    if (title && typeof title !== 'string') {
+        errors.title = 'Title must be a string';
+    }
+    if (author && !mongoose.Types.ObjectId.isValid(author)) {
+        errors.author = 'Author must be a valid Id';
+    }
+    if (category && !mongoose.Types.ObjectId.isValid(category)) {
+        errors.category = 'Category must be a valid Id';
+    }
+    if (price !== undefined && (typeof price !== 'number' || Number(price) < 0)) {
+        errors.price = 'Price must be a non-negative number';
+    }
+    if (stock !== undefined && (typeof stock !== 'number' || Number(stock) < 0)) {
+        errors.stock = 'Stock must be a non-negative number';
+    }
+    if (summary && typeof summary !== 'string') {
+        errors.summary = 'Summary must be a string';
+    }
+    if (averageRating !== undefined && (typeof averageRating !== 'number' || Number(averageRating) < 0 || Number(averageRating) > 5)) {
+        errors.averageRating = 'Average rating must be a number between 0 and 5';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+}
+
+
+export {
+    userValidation,
+    signInUserValidation,
+    userUpdateValidation,
+    createBookValidation,
+    updateBookValidation
 };

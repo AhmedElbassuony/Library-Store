@@ -1,7 +1,7 @@
 import bycrapt from 'bcrypt';
 
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 
 
 const createJSONResponse = (success, message, data = null) => {
@@ -13,7 +13,7 @@ const createJSONResponse = (success, message, data = null) => {
 }
 
 
-hasInvalidBook = (cart) => {
+const hasInvalidBook = (cart) => {
     if (!Array.isArray(cart)) {
         return true;
     }
@@ -41,9 +41,6 @@ const isPasswordCorrect = async (password, hashedPassword) => {
 
 export {
     createJSONResponse,
-    userValidation,
     hashPassword,
-    isPasswordCorrect,
-    signInUserValidation,
-    userUpdateValidation
+    isPasswordCorrect
 };
