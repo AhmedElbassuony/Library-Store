@@ -8,20 +8,25 @@ import {
     deleteUserController,
     getCart,
     clearCartController,
-    putCartController
+    putCartController,
+    removeBookFromCartController
 } from '../controllers/userController.js';
 import { admin, authenticated, hasAccess } from '../utils/middleware/index.js';
-
+import { addBookToCartController } from '../controllers/userController.js';
 const userRouter = express.Router();
 
-userRouter.get('/',authenticated,admin, getUsers);
+userRouter.get('/', authenticated, admin, getUsers);
 userRouter.post('/', registerUser);
-userRouter.get('/:id', authenticated, hasAccess, getUserByIdController);
-userRouter.put('/:id', authenticated, hasAccess, updateUserController);
-userRouter.delete('/:id', authenticated, hasAccess, deleteUserController);
 userRouter.post('/signin', signInUser);
 
 userRouter.get('/cart', authenticated, getCart);
-userRouter.put('/cart', authenticated, putCartController);
+userRouter.post('/cart', authenticated, putCartController);
+userRouter.put('/cart', authenticated, addBookToCartController);
 userRouter.delete('/cart', authenticated, clearCartController);
+userRouter.delete('/cart/:bookId', authenticated, removeBookFromCartController);
+
+userRouter.get('/:id', authenticated, hasAccess, getUserByIdController);
+userRouter.put('/:id', authenticated, hasAccess, updateUserController);
+userRouter.delete('/:id', authenticated, hasAccess, deleteUserController);
+
 export default userRouter;

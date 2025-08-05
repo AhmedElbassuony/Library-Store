@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { isAuthorExists } from '../../services/authorService.js';
+import { isBookExists } from '../../services/bookService.js';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,12 +16,12 @@ const userValidation = (user) => {
     }
     if (!password) {
         errors.password = 'Password is required';
-    } else if (password.length < 6) {
+    } else if (password.trim().length < 6) {
         errors.password = 'Password must be at least 6 characters long';
     }
     if (!username) {
         errors.username = 'Username is required';
-    } else if (username.length < 3) {
+    } else if (username.trim().length < 3) {
         errors.username = 'Username must be at least 3 characters long';
     }
     if (!gender) {
@@ -53,7 +54,7 @@ const userUpdateValidation = (user) => {
         errors.email = "You cannot update email";
     }
 
-    if (password && password.length < 6) {
+    if (password && password.trim().length < 6) {
         errors.password = 'Password must be at least 6 characters long';
     }
 
@@ -82,13 +83,13 @@ const userUpdateValidation = (user) => {
     };
 };
 
-const createBookValidation = (book) => {
+const createBookValidation = async (book) => {
     const { title, author, price, stock, averageRating } = book;
     const errors = {};
-    if (!title) {
+    if (!title.trim()) {
         errors.title = 'Title is required';
     }
-    if (!author || !mongoose.Types.ObjectId.isValid(author) || !isAuthorExists(author)) {
+    if (!author || !mongoose.Types.ObjectId.isValid(author) || !(await isAuthorExists(author))) {
         errors.author = 'Author is required and must be a valid Id';
     }
     if (price === undefined || price === null || price === '') {
@@ -107,13 +108,13 @@ const createBookValidation = (book) => {
     return { isValid: Object.keys(errors).length === 0, errors };
 };
 
-const updateBookValidation = (book) => {
+const updateBookValidation = async (book) => {
     const { title, author, category, price, stock, summary, averageRating } = book;
     const errors = {};
     if (title && typeof title !== 'string') {
         errors.title = 'Title must be a string';
     }
-    if (author && (!mongoose.Types.ObjectId.isValid(author) || !isAuthorExists(author))) {
+    if (author && (!mongoose.Types.ObjectId.isValid(author) || !(await isAuthorExists(author)))) {
         errors.author = 'Author must be a valid Id';
     }
     if (category && !mongoose.Types.ObjectId.isValid(category)) {
@@ -154,6 +155,33 @@ const updateAuthorValidation = (author) => {
     return { isValid: Object.keys(errors).length === 0, errors };
 };
 
+const validateCartItem = async (item) => {
+    if (!item || !item.bookId || !mongoose.Types.ObjectId.isValid(item.bookId)) {
+        return false;
+    }
+    const bookExists = await isBookExists(item.bookId);
+    if (!bookExists) {
+        return false;
+    }
+    if (item.quantity && (typeof item.quantity !== 'number' || item.quantity <= 0)) {
+        return false;
+    }
+    return true;
+};
+
+const cartValidation = (cart) => {
+    const errors = {};
+    if (!cart || !Array.isArray(cart) || cart.length === 0) {
+        errors.cart = 'Cart must be a non-empty array';
+        return { isValid: Object.keys(errors).length === 0, errors };
+    }
+    const valid = cart.every(item => validateCartItem(item));
+    if (!valid) {
+        errors.cart = 'All items in the cart must have a valid book ID';
+    }
+    return { isValid: Object.keys(errors).length === 0, errors };
+}
+
 
 export {
     userValidation,
@@ -162,5 +190,7 @@ export {
     createBookValidation,
     updateBookValidation,
     createAuthorValidation,
-    updateAuthorValidation
+    updateAuthorValidation,
+    cartValidation,
+    validateCartItem
 };

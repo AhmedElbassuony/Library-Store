@@ -35,6 +35,11 @@ const addRate = async (book, rating, count) => {
     await book.save();
 };
 
+const isBookExists = async (bookId) => {
+    const book = await getBookById(bookId);
+    return book !== null;
+}
+
 export {
     getAllBooks,
     getBookById,
@@ -43,5 +48,6 @@ export {
     deleteBook,
     getBooksByCategory,
     getBooksByAuthor,
-    addRate
+    addRate,
+    isBookExists
 };

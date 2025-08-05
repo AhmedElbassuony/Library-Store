@@ -22,8 +22,13 @@ import {
 import {
     userValidation,
     signInUserValidation,
-    userUpdateValidation
+    userUpdateValidation,
+    cartValidation
 } from '../utils/validation/index.js';
+
+import {
+    isBookExists
+} from '../services/bookService.js';
 
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
@@ -146,6 +151,10 @@ const putCartController = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
     }
+    const { isValid, errors } = cartValidation(cart);
+    if (!isValid) {
+        return res.status(400).json(createJSONResponse(false, 'Validation errors', errors));
+    }
     try {
         const user = await getUserById(userId);
         if (!user) {
@@ -193,6 +202,55 @@ const clearCartController = async (req, res) => {
     }
 };
 
+const addBookToCartController = async (req, res) => {
+    const userId = req.userId;
+    const { bookId, quantity } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    if (!mongoose.Types.ObjectId.isValid(bookId) || !(await isBookExists(bookId))) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid book ID'));
+    }
+    if (quantity && (typeof quantity !== 'number' || quantity <= 0)) {
+        return res.status(400).json(createJSONResponse(false, 'Quantity must be a positive number'));
+    }
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        const updatedCart = await addBookToCart(user, bookId, quantity);
+        return res.json(createJSONResponse(true, 'Book added to cart successfully', updatedCart));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error adding book to cart', error.message));
+    }
+}
+
+const removeBookFromCartController = async (req, res) => {
+    const userId = req.userId;
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid user ID'));
+    }
+    const bookId = req.params.bookId;
+    if (!mongoose.Types.ObjectId.isValid(bookId)) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid book ID'));
+    }
+    const quantity = req.body?.quantity || 1; // Default to 1 if not provided
+    if (typeof quantity !== 'number' || quantity <= 0) {
+        return res.status(400).json(createJSONResponse(false, 'Invalid quantity value'));
+    }
+    try {
+        const user = await getUserById(userId);
+        if (!user) {
+            return res.status(404).json(createJSONResponse(false, 'User not found'));
+        }
+        const updatedCart = await removeBookFromCart(user, bookId, quantity);
+        return res.json(createJSONResponse(true, 'Book removed from cart successfully', updatedCart));
+    } catch (error) {
+        return res.status(500).json(createJSONResponse(false, 'Error removing book from cart', error.message));
+    }
+}
+
 export {
     getUsers,
     registerUser,
@@ -202,5 +260,7 @@ export {
     deleteUserController,
     getCart,
     clearCartController,
-    putCartController
+    putCartController,
+    addBookToCartController,
+    removeBookFromCartController
 }
