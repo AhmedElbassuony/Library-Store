@@ -1,0 +1,15 @@
+.cart span {
+    position: absolute;
+    bottom: -10px;
+    right: -20px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    z-index: 10;
+}
+
+.cart:hover img{
+    transform: scale(1.2);
+}

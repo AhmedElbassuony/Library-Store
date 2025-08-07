@@ -13,12 +13,6 @@ import { Router } from '@angular/router';
 export class LoginComponent {
   constructor(private _AuthService: AuthService, private toastr: ToastrService, private _Router: Router) { }
 
-  ngOnInit(): void {
-    if (localStorage.getItem("jwt")) {
-      this._Router.navigate(["/"]);
-    }
-  }
-
   loginForm = new FormGroup({
     email: new FormControl(null, [Validators.required, Validators.email]),
     password: new FormControl(null, [Validators.required, Validators.minLength(6)])
@@ -43,12 +37,13 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this._AuthService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          console.log(res);
+          // console.log(res);
           localStorage.setItem("jwt", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data.user))
           this.toastr.success(`Login Success! ${res.message}`);
           this._Router.navigate(["/"])
         }, error: (res) => {
-          console.log(res.error);
+          // console.log(res.error);
           this.toastr.error(res.error.message)
         }
       })

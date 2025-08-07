@@ -1,10 +1,10 @@
-<header class="bg-white  shadow-xl">
+<header class="bg-white  shadow-xl sticky top-0 z-100">
     <div class="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
             <div class="flex-1 md:flex md:items-center md:gap-12">
                 <a class="text-teal-600 flex items-center justify-center space-x-3" href="#">
                     <span class="sr-only">Home</span>
-                    <img src="logo.png" alt="logo" class="size-10 object-cover" >
+                    <img src="logo.png" alt="logo" class="size-10 object-cover">
                     <h3 class="text-2xl text-neutral-600 font-bold">Book World</h3>
                 </a>
             </div>
@@ -13,42 +13,48 @@
                 <nav aria-label="Global" class="hidden md:block">
                     <ul class="flex items-center gap-6 text-md">
                         <li>
+                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Authors </a>
+                        </li>
+
+                        <li>
+                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Categories </a>
+                        </li>
+
+                        <li>
                             <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> About </a>
                         </li>
 
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Careers </a>
-                        </li>
-
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> History </a>
-                        </li>
-
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
-                        </li>
-
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
-                        </li>
-
-                        <li>
-                            <a class="text-gray-500 transition hover:text-gray-500/75" href="#"> Blog </a>
+                        <li class="cart">
+                            <a class="text-gray-500 transition hover:text-gray-500/75 flex justify-center items-center gap-4"
+                                href="#"> Cart
+                                <div class="relative">
+                                    <img src="books.svg" alt="books cart" class="size-8 cart">
+                                    <span>{{user.cart.length}}</span>
+                                </div>
+                            </a>
                         </li>
                     </ul>
                 </nav>
 
                 <div class="hidden md:relative md:block">
-                    <button (click)="toggleDropMenu()" type="button" class="overflow-hidden rounded-full border border-gray-300 shadow-inner">
+                    <button (click)="toggleDropMenu()" type="button"
+                        class="overflow-hidden rounded-full border border-gray-300 shadow-inner">
                         <span class="sr-only">Toggle dashboard menu</span>
 
-                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="" class="size-10 object-cover" />
+                        <img [src]="user.profilePicture" alt="" class="size-10 object-cover" />
                     </button>
 
-                    <div id="dropmenu" class="hidden absolute end-0 z-10 mt-0.5 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg"
+                    <div id="dropmenu"
+                        class="hidden absolute end-0 z-10 mt-0.5 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg"
                         role="menu">
                         <div class="p-2">
+                            @if (user.role === "admin") {
+                            <a href="#"
+                                class="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+                                role="menuitem">
+                                Dashboard
+                            </a>
+                            }
                             <a href="#"
                                 class="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                                 role="menuitem">
@@ -69,19 +75,17 @@
                         </div>
 
                         <div class="p-2">
-                            <form method="POST" action="#">
-                                <button type="submit"
-                                    class="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
-                                    role="menuitem">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="size-4">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                                    </svg>
+                            <button type="submit" (click)="logout()"
+                                class="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
+                                role="menuitem">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                </svg>
 
-                                    Logout
-                                </button>
-                            </form>
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>
