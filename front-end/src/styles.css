@@ -196,6 +196,12 @@ button.toast-close-button {
     opacity: 0.4;
 }
 
+.toast-top-center {
+    top: 20px !important;
+    /* adjust this value for margin-top */
+}
+
+
 /* Responsive Design */
 @media all and (max-width: 240px) {
     .toast-container .ngx-toastr.div {
