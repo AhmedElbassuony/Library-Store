@@ -7,14 +7,14 @@ interface ILoginData {
   password?: string | null
 }
 interface IUser {
-  username: string,
-  email: string,
-  password: string,
-  gender: "male" | "female",
-  address?: string,
-  phone?: string,
-  profilePicture?: string,
-  dateOfBirth?: Date
+  username?: string | null,
+  email?: string | null,
+  password?: string | null,
+  gender?: string | null,
+  address?: string | null,
+  phone?: string | null,
+  profilePicture?: string | null,
+  dateOfBirth?: Date | null
 }
 
 @Injectable({

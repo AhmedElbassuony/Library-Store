@@ -1,0 +1,85 @@
+<section class="bg-white dark:bg-gray-900">
+  <div class="flex justify-center min-h-screen">
+    <div class="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
+      <div class="w-full">
+        <h1 class="text-2xl font-semibold tracking-wider text-gray-800 capitalize dark:text-white">
+          <img src="logo.png" alt="Your Company" class="h-20 w-auto inline" />
+          Create A New Account
+        </h1>
+
+        <p class="mt-4 text-gray-500 dark:text-gray-400">
+          Let’s get you all set up so you can verify your personal account and begin setting up your profile.
+        </p>
+
+        <form class="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2" [formGroup]="registerForm" (ngSubmit)="sendData()">
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">User name</label>
+            <input type="text" formControlName="username" placeholder="Ahmed"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+            <p class="mt-3 text-xs text-red-400">{{errors.username}}</p>
+          </div>
+
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Email address</label>
+            <input type="email" formControlName="email" placeholder="Ahmed@example.com"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+            <p class="mt-3 text-xs text-red-400">{{errors.email}}</p>
+          </div>
+
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Address</label>
+            <input type="text" formControlName="address" placeholder="123 Main St, Downtown, Cairo"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+          </div>
+
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Phone number</label>
+            <input type="text" formControlName="phone" placeholder="XXX-XX-XXXX-XXX"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+          </div>
+
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Password</label>
+            <input type="password" formControlName="password" placeholder="Enter your password"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+            <p class="mt-3 text-xs text-red-400">{{errors.password}}</p>
+          </div>
+
+          <div>
+            <label class="block mb-2 text-sm text-gray-600 dark:text-gray-200">Image URL</label>
+            <input type="text" formControlName="profilePicture" placeholder="https://picsum.photos/200/300"
+              class="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40" />
+          </div>
+
+
+          <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700">
+            <input formControlName="gender" checked id="bordered-radio-1" type="radio" value="male"
+              class="w-4 h-4 accent-blue-600">
+            <label for="bordered-radio-1"
+              class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Male</label>
+          </div>
+
+          <div class="flex items-center ps-4 border border-gray-200 rounded-sm dark:border-gray-700">
+            <input formControlName="gender" id="bordered-radio-2" type="radio" value="female"
+              class="w-4 h-4 accent-blue-600">
+            <label for="bordered-radio-2"
+              class="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Female</label>
+          </div>
+
+          <a routerLink="/login"
+            class="w-full text-center px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+            have an account
+          </a>
+
+
+          <button
+            class="flex cursor-pointer items-center justify-center w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+            <span>Sign Up </span>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="hidden bg-cover lg:block lg:w-2/5" style="background-image: url('register.jpeg')">
+    </div>
+  </div>
+</section>

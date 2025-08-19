@@ -6,6 +6,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { LoginRedirectGuard } from './guard/login-redirect.guard';
 import { BooksComponent } from './routes/books/books.component';
 import { DashboardComponent } from './routes/dashboard/dashboard.component';
+import { RegisterComponent } from './routes/register/register.component';
 
 export const routes: Routes = [
     {
@@ -16,5 +17,6 @@ export const routes: Routes = [
         ]
     },
     { path: "login", component: LoginComponent, title: "Login", canActivate: [LoginRedirectGuard] },
+    { path: "register", component: RegisterComponent, title: "Register", canActivate: [LoginRedirectGuard] },
     { path: "**", component: NotFoundComponent, title: "404 Not Found" }
 ];

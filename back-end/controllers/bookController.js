@@ -42,7 +42,8 @@ const createBookController = async (req, res) => {
     if (!bookData || typeof bookData !== 'object') {
         return res.status(400).json(createJSONResponse(false, 'Invalid book data'));
     }
-    const { isValid, errors } = createBookValidation(bookData);
+    const { isValid, errors } = await createBookValidation(bookData);
+    // console.log(isValid);
     if (!isValid) {
         return res.status(400).json(createJSONResponse(false, 'Validation errors', errors));
     }

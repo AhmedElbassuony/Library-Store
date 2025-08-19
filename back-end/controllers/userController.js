@@ -55,7 +55,8 @@ const registerUser = async (req, res) => {
     try {
         const newUser = await createUser(req.body);
         newUser.password = undefined; // Remove password from response
-        return res.status(201).json(createJSONResponse(true, 'User registered successfully', newUser));
+        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '2h' });
+        return res.status(201).json(createJSONResponse(true, 'User registered successfully', { user: newUser, token }));
     } catch (error) {
         return res.status(500).json(createJSONResponse(false, 'Error registering user', error.message));
     }
