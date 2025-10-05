@@ -12,7 +12,6 @@ const createJSONResponse = (success, message, data = null) => {
     };
 }
 
-
 const hasInvalidBook = (cart) => {
     if (!Array.isArray(cart)) {
         return true;

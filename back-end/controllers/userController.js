@@ -55,7 +55,7 @@ const registerUser = async (req, res) => {
     try {
         const newUser = await createUser(req.body);
         newUser.password = undefined; // Remove password from response
-        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '2h' });
+        const token = jwt.sign({ userId: newUser._id, role: newUser.role }, process.env.JWT_SECRET);
         return res.status(201).json(createJSONResponse(true, 'User registered successfully', { user: newUser, token }));
     } catch (error) {
         return res.status(500).json(createJSONResponse(false, 'Error registering user', error.message));
@@ -97,7 +97,7 @@ const signInUser = async (req, res) => {
             return res.status(401).json(createJSONResponse(false, 'Invalid email or password'));
         }
         user.password = undefined; // Remove password from response
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '2h' });
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET);
         return res.json(createJSONResponse(true, 'User signed in successfully', { user, token }));
     } catch (error) {
         return res.status(500).json(createJSONResponse(false, 'Error signing in user', error.message));
